@@ -1,32 +1,32 @@
-const tipForm = document.getElementById('tip-form');
-const tipsContainer = document.getElementById('tip-container');
-const fbBtn = document.getElementById('feedback-btn');
+const tipForm = document.getElementById("tip-form");
+const tipsContainer = document.getElementById("tip-container");
+const fbBtn = document.getElementById("feedback-btn");
 
-fbBtn.addEventListener('click', (e) => {
+fbBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  window.location.href = '/feedback';
+  window.location.href = "/feedback";
 });
 
 const createCard = (tip) => {
   // Create card
-  const cardEl = document.createElement('div');
-  cardEl.classList.add('card', 'mb-3', 'm-3');
-  cardEl.setAttribute('key', tip.tip_id);
+  const cardEl = document.createElement("div");
+  cardEl.classList.add("card", "mb-3", "m-3");
+  cardEl.setAttribute("key", tip.tip_id);
 
   // Create card header
-  const cardHeaderEl = document.createElement('h4');
+  const cardHeaderEl = document.createElement("h4");
   cardHeaderEl.classList.add(
-    'card-header',
-    'bg-primary',
-    'text-light',
-    'p-2',
-    'm-0'
+    "card-header",
+    "bg-primary",
+    "text-light",
+    "p-2",
+    "m-0"
   );
   cardHeaderEl.innerHTML = `${tip.username} </br>`;
 
   // Create card body
-  const cardBodyEl = document.createElement('div');
-  cardBodyEl.classList.add('card-body', 'bg-light', 'p-2');
+  const cardBodyEl = document.createElement("div");
+  cardBodyEl.classList.add("card-body", "bg-light", "p-2");
   cardBodyEl.innerHTML = `<p>${tip.tip}</p>`;
 
   // Append the header and body to the card element
@@ -39,24 +39,24 @@ const createCard = (tip) => {
 
 // Get a list of existing tips from the server
 const getTips = () =>
-  fetch('/api/tips', {
-    method: 'GET',
+  fetch("/api/tips", {
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   })
     .then((response) => response.json())
     .then((data) => data)
     .catch((error) => {
-      console.error('Error:', error);
+      console.error("Error:", error);
     });
 
 // Post a new tip to the page
 const postTip = (tip) =>
-  fetch('/api/tips', {
-    method: 'POST',
+  fetch("/api/tips", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(tip),
   })
@@ -66,7 +66,7 @@ const postTip = (tip) =>
       createCard(tip);
     })
     .catch((error) => {
-      console.error('Error:', error);
+      console.error("Error:", error);
     });
 
 // When the page loads, get all the tips
@@ -79,27 +79,27 @@ const validateTip = (newTip) => {
 
   // Object to hold our error messages until we are ready to return
   const errorState = {
-    username: '',
-    tip: '',
-    topic: '',
+    username: "",
+    tip: "",
+    topic: "",
   };
 
   // Bool value if the username is valid
   const utest = username.length >= 4;
   if (!utest) {
-    errorState.username = 'Invalid username!';
+    errorState.username = "Invalid username!";
   }
 
   // Bool value to see if the tip being added is at least 15 characters long
   const tipContentCheck = tip.length > 15;
   if (!tipContentCheck) {
-    errorState.tip = 'Tip must be at least 15 characters';
+    errorState.tip = "Tip must be at least 15 characters";
   }
 
   // Bool value to see if the topic is either UX or UI
-  const topicCheck = topic.includes('UX' || 'UI');
+  const topicCheck = topic.includes("UX" || "UI");
   if (!topicCheck) {
-    errorState.topic = 'Topic not relevant to UX or UI';
+    errorState.topic = "Topic not relevant to UX or UI";
   }
 
   const result = {
@@ -125,26 +125,42 @@ const showErrors = (errorObj) => {
 const submitDiagnostics = (submissionObj) => {
   // TODO: your code here
   console.info(
-    '⚠️ Create the logic for the fetch POST request in scripts/index.js'
+    "⚠️ Create the logic for the fetch POST request in scripts/index.js"
   );
-  alert('Add your logic to scripts/index.js');
+  console.log(submissionObj);
+  fetch("api/diagnostics", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(submissionObj.errors),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("Successful diagnostics POST request", data);
+    })
+    .catch((error) => {
+      console.error("Error in diagnostics request", error);
+    });
+
+  alert("Add your logic to scripts/index.js");
 };
 
 // Function to handle when a user submits the feedback form
 const handleFormSubmit = (e) => {
   e.preventDefault();
-  console.log('Form submit invoked');
+  console.log("Form submit invoked");
 
   // Get the value of the tip and save it to a variable
-  const tipContent = document.getElementById('tipText').value;
+  const tipContent = document.getElementById("tipText").value;
 
   // get the value of the username and save it to a variable
-  const tipUsername = document.getElementById('tipUsername').value.trim();
+  const tipUsername = document.getElementById("tipUsername").value.trim();
 
   // Create an object with the tip and username
   const newTip = {
     username: tipUsername,
-    topic: 'UX',
+    topic: "UX",
     tip: tipContent,
   };
 
@@ -156,4 +172,4 @@ const handleFormSubmit = (e) => {
 };
 
 // Listen for when the form is submitted
-tipForm.addEventListener('submit', handleFormSubmit);
+tipForm.addEventListener("submit", handleFormSubmit);
